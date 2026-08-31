@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock · YING MOTORS</title>
+  <meta name="description" content="New trucks, trailers, mixers, loaders and used Komatsu excavators from Shandong Yingmotors.">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#210E06">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=Oswald:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="products" data-title="products_title">
+  <header class="site-header" id="site-header"></header>
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="kicker">YING MOTORS</p>
+      <h1 data-i18n="products_title"></h1>
+      <p class="lead" data-i18n="products_lead"></p>
+      <p class="spec-disclaimer" data-i18n="detail_note"></p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <div class="filters" id="filters">
+        <button class="filter-chip" type="button" data-filter="all" data-i18n="filter_all"></button>
+        <button class="filter-chip" type="button" data-filter="new" data-i18n="filter_new"></button>
+        <button class="filter-chip" type="button" data-filter="used" data-i18n="filter_used"></button>
+        <button class="filter-chip" type="button" data-filter="truck" data-i18n="filter_truck"></button>
+        <button class="filter-chip" type="button" data-filter="trailer" data-i18n="filter_trailer"></button>
+        <button class="filter-chip" type="button" data-filter="light" data-i18n="filter_light"></button>
+        <button class="filter-chip" type="button" data-filter="bus" data-i18n="filter_bus"></button>
+        <button class="filter-chip" type="button" data-filter="excavator" data-i18n="filter_excavator"></button>
+        <button class="filter-chip" type="button" data-filter="loader" data-i18n="filter_loader"></button>
+        <button class="filter-chip" type="button" data-filter="mixer" data-i18n="filter_mixer"></button>
+        <button class="filter-chip" type="button" data-filter="special" data-i18n="filter_special"></button>
+        <a class="filter-chip" href="custom.html" data-i18n="filter_custom"></a>
+      </div>
+      <div class="cards" id="product-grid"></div>
+    </div>
+  </section>
+  <footer class="site-footer" id="site-footer"></footer>
+  <script src="js/i18n.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
