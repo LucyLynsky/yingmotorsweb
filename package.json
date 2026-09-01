@@ -1,8 +1,0 @@
-{
-  "name": "yingmotorsweb",
-  "version": "1.0.0",
-  "description": "Static website",
-  "scripts": {
-    "build": "echo 'No build needed'"
-  }
-}

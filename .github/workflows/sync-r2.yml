@@ -6,9 +6,9 @@ on:
   # 当代码推送到 main 分支时触发
   push:
     branches: [ main ]
-    # 只有 web/images 目录下的文件发生变化时才运行
+    # 只有 resource/images 目录下的文件发生变化时才运行
     paths:
-      - 'web/images/**'
+      - 'resource/images/**'
   # 支持从 GitHub Actions 页面手动触发
   workflow_dispatch:
 
@@ -43,12 +43,12 @@ jobs:
             endpoint=https://$R2_ACCOUNT_ID.r2.cloudflarestorage.com \
             acl=public-read
 
-      # 步骤4：执行同步，将本地 web/images 目录同步到 R2 存储桶
+      # 步骤4：执行同步，将本地 resource/images 目录同步到 R2 存储桶
       - name: Sync files to R2
         env:
           R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
         run: |
-          rclone sync ./web/images r2:$R2_BUCKET_NAME/web/images \
+          rclone sync ./resource/images r2:$R2_BUCKET_NAME/web/images \
             --progress \
             --verbose \
             --update \
