@@ -1,3 +1,5 @@
+var YM_IMAGES_BASE = "https://webimages.yingmotors.com/web/images/";
+
 function ymDir(sku, slug) {
   return sku + "_" + slug;
 }
@@ -12,11 +14,11 @@ function ymStock(sku, slug, count, thumbNo) {
     return sku + "_" + n + ".jpg";
   }
   for (i = 1; i <= count; i++) {
-    images.push("images/stock/" + folder + "/" + fileName(i));
+    images.push(YM_IMAGES_BASE + "stock/" + folder + "/" + fileName(i));
   }
   return {
     images: images,
-    thumb: "images/stock/" + folder + "/thumbs/" + fileName(thumb)
+    thumb: YM_IMAGES_BASE + "stock/" + folder + "/thumbs/" + fileName(thumb)
   };
 }
 
@@ -24,7 +26,7 @@ function ymVid(sku, slug, names) {
   var folder = ymDir(sku, slug);
   return names.map(function (name) {
     var file = name.indexOf(sku + "_") !== 0 ? sku + "_" + name : name;
-    return "images/stock/" + folder + "/" + file;
+    return YM_IMAGES_BASE + "stock/" + folder + "/" + file;
   });
 }
 
@@ -70,7 +72,7 @@ var _ub = ymStock("YM-UBS-001", "used-bus", 7, 5);
 var _ug = ymStock("YM-UBS-002", "used-bus-yutong", 8);
 
 /* Stock number: YM-{N|U}{TYPE}-{NNN}
-   Folder: images/stock/{sku}_{id}/   e.g. YM-UTK-001_used-howo-tractor/
+   Folder: {YM_IMAGES_BASE}stock/{sku}_{id}/   e.g. YM-UTK-001_used-howo-tractor/
    Files: {sku}_01.jpg, {sku}_v01.mp4, thumbs/{sku}_01.jpg, {sku}_description.md
    N=new U=used
    TK=truck TL=trailer TC=tricycle FW=fourwheel

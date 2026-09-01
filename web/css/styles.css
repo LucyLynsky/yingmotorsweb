@@ -327,7 +327,7 @@ h1, h2, h3, h4, .brand-type {
 }
 
 .page-hero {
-  background: var(--dark) url("../images/about.jpg") center/cover;
+  background: var(--dark) url("https://webimages.yingmotors.com/web/images/about.jpg") center/cover;
   color: var(--white);
   padding: 90px 0 70px;
   position: relative;
