@@ -646,6 +646,15 @@ a.filter-chip { display: inline-flex; align-items: center; color: inherit; }
   border-top: 1px solid rgba(228, 148, 2, 0.2);
   font-size: 0.85rem;
 }
+.sitemap-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 28px 32px;
+}
+.sitemap-cols h2 { margin-bottom: 10px; }
+.sitemap-cols ul { list-style: none; padding: 0; margin: 0; }
+.sitemap-cols li { margin: 6px 0; }
+.sitemap-cols a { display: block; }
 
 .float-contacts {
   position: fixed;

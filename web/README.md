@@ -11,6 +11,17 @@ python -m http.server 8080
 
 浏览器打开 http://127.0.0.1:8080/
 
+### Cursor Skill（开发约定）
+
+本站的技术选型、目录、R2 图片、加车/换图/写参数等开发约定已写成项目 Skill，Agent 改这个仓库时应读取：
+
+| 文件 | 用途 |
+| --- | --- |
+| [`.cursor/skills/yingmotors-web/SKILL.md`](.cursor/skills/yingmotors-web/SKILL.md) | 硬约束、目录、R2、i18n、询盘 |
+| [`.cursor/skills/yingmotors-web/reference.md`](.cursor/skills/yingmotors-web/reference.md) | 加车、换图、删车、看图写文案 |
+
+下文第 1～4 节是给人看的需求与维护手册，与 Skill 内容对应；图片上线以 Cloudflare R2 为准。
+
 ---
 
 ## 1. 网站开发需求关键点
@@ -46,7 +57,8 @@ python -m http.server 8080
 | 资料 | 路径 | 用途 |
 | --- | --- | --- |
 | 产品目录原片 | `images/products/NEW`、`images/products/USED` | 按车型分夹的实拍（含 HEIC / 视频） |
-| 网页用图 | `images/stock/{sku}_{id}/` | 按现车编号分夹：JPG、视频、描述 md |
+| 网页用图（本地制图） | `images/stock/{sku}_{id}/` | 按现车编号分夹：JPG、视频、描述 md |
+| 网页用图（线上） | `https://webimages.yingmotors.com/web/images/` | Cloudflare R2；对象键 `web/images/{相对路径}` |
 | 品牌 Logo | `bandlogo/`、`assets/` | 顶栏、页脚、Favicon、联系标签 |
 
 约束：
@@ -91,7 +103,7 @@ python -m http.server 8080
 - `搅拌罐` 中集搅拌车
 - `重汽豪沃蓝牌清洗吸污车` 含介绍文档参数
 
-网页不直接引用中文路径和 HEIC，统一转到 `images/stock/{sku}_{id}/`。同一 Stock No. 的图片、视频、产品描述放在同一个文件夹。
+网页不直接引用中文路径和 HEIC。制图输出到 `images/stock/{sku}_{id}/`，**网站运行时**通过 `YM_IMAGES_BASE` 读 R2：`https://webimages.yingmotors.com/web/images/stock/{sku}_{id}/`。同一 Stock No. 的图片、视频、产品描述放在同一个文件夹。
 
 ---
 
@@ -109,20 +121,23 @@ python -m http.server 8080
 E:\codePrj\web\
   index.html              首页
   products.html           现车目录
-  product.html            详情（?id=产品ID）
+  product.html            详情（?id=产品ID 或 SKU）
+  custom.html             定制说明
   about.html / contact.html
   css/styles.css          全站样式
   js/i18n.js              中英文文案
-  js/products.js          产品数据 + 卡片渲染
+  js/products.js          产品数据、YM_IMAGES_BASE、卡片渲染
   js/app.js               顶栏页脚、语言、筛选、详情、表单
-  assets/                 网页用 Logo / Favicon / OG 图
+  js/countries.js         联系表国家列表（仅 contact.html）
+  assets/                 网页用 Logo / Favicon / OG 图（本地）
+  contact/                微信 / WhatsApp 二维码（本地）
   images/products/        按车型分夹的原始目录（NEW / USED）
-  images/stock/           网页用 JPG / 视频，文件夹名为 {sku}_{product_id}
-  images/hero.jpg         首页主图
-  bandlogo/               品牌 Logo 源文件
+  images/stock/           制图源 JPG / 视频，文件夹名为 {sku}_{product_id}
+  docs/                   水印、产品资料表脚本
+  .cursor/skills/yingmotors-web/  开发 Skill
 ```
 
-源图目录保留不动；网站只引用 `images/` 和 `assets/`。
+源图在本地 `images/` 制作；**网页引用的现车图、hero、about 走 R2**。`assets/` 与 `contact/` 仍用相对路径。CDN 根：`https://webimages.yingmotors.com/web/images/`（见 `js/products.js` 的 `YM_IMAGES_BASE`）。
 
 ### 2.3 中英文切换（实现要点）
 
@@ -141,30 +156,32 @@ E:\codePrj\web\
 
 - `id`：URL 用，如 `product.html?id=komatsu-pc200`
 - `category`：`new` 或 `used`（筛选「新车 / 二手」）
-- `type`：`truck` / `trailer` / `tricycle` / `fourwheel` / `bus` / `excavator` / `mixer` / `special`
+- `type`：`truck` / `trailer` / `tricycle` / `fourwheel` / `bus` / `excavator` / `loader` / `mixer` / `special`
 - `brand`、`images[]`、`thumb`，可选 `videos[]`
 
 筛选逻辑在 `js/app.js` 的 `YM.mountProductList()`：`?cat=used`、`?cat=truck`、`?cat=light`（三轮+四轮）、`?cat=machinery`（挖机+搅拌+环卫）。
 
 WhatsApp 预填文案由 `YM.whatsappLink(product)` 生成，会带上当前语言和车型名。
 
-**加一台车：** 原片放进 `images/products/NEW` 或 `USED` 对应文件夹 → 转成 `images/stock/{sku}_{id}/` → 在 `js/products.js` 追加一条。
+**加一台车：** 原片放进 `images/products/NEW` 或 `USED` 对应文件夹 → 转成 `images/stock/{sku}_{id}/` → 打水印 → 上传 R2 同一相对路径 → 在 `js/products.js` 追加一条。逐步清单见 Skill `reference.md`。
 
 详情页文案（名称、简介、要点、参数）**不是**从图片自动生成的，也没有 OCR 或后台。全部是看实拍后写进 `products.js` 的 `en` / `zh`。写法与字段对照见 **4.5**。
 
 ### 2.5 图片处理（实现要点）
 
 - HEIC 用 Python（Pillow + pillow-heif）转 JPG，再压到长边约 1600px，输出到 `images/stock/{sku}_{id}/`（避免中文路径和 HEIC）。
-- 列表用 `thumbs/`（约 16:10 裁切），详情用全图。
+- 列表用 `thumbs/`（约 16:10 裁切），详情用全图。需要时用 `docs/watermark_stock.py` 打「Yingmotors」水印。
 - 视频复制为 `{sku}_v01.mp4` 等，详情页 `<video>` 播放。
-- 首页 `images/hero.jpg` 从车队实拍裁成 16:9。
+- 首页主图线上为 `https://webimages.yingmotors.com/web/images/hero.jpg`（本地可保留同名文件便于再导出）。
+- 内页横幅 / 关于页图：`https://webimages.yingmotors.com/web/images/about.jpg`。
 - 竖图按车身位置做 `focus_y` 裁切，避免卡片只看到天空或地面。
+- **上线：** 把 `images/hero.jpg`、`about.jpg`、`images/stock/...` 上传到 R2，键为 `web/images/...`。不要把相对路径 `images/` 写回 HTML/JS。
 
-以后换图：先转格式、出 thumb，再改 `products.js` 路径。不要把 `.heic` 写进 HTML。
+以后换图：先转格式、出 thumb、打水印、覆盖 R2，必要时改 `products.js` 张数。不要把 `.heic` 写进 HTML。
 
 ### 2.6 公共头尾与询盘
 
-- 顶栏、页脚、悬浮 WhatsApp 由 `YM.mountChrome()` 注入，避免五个 HTML 各写一份。
+- 顶栏、页脚、悬浮 WhatsApp 由 `YM.mountChrome()` 注入，避免各 HTML 各写一份。
 - 页面用 `data-page` 高亮当前导航；`data-title` 用于双语 `<title>`。
 - 联系页左侧仍展示 WhatsApp / 微信 / 邮箱；表单上只保留 **Send**，不再用 WhatsApp 提交。
 - 号码写成 `8618053729906`（国家码、无 `+`、无空格），否则 WhatsApp 链接会失效。
@@ -204,14 +221,22 @@ WhatsApp 预填文案由 `YM.whatsappLink(product)` 生成，会带上当前语�
 <script src="js/app.js"></script>
 ```
 
+`contact.html` 在 `app.js` 前多加载 `js/countries.js`。页面 `<head>` 对 R2 做 `preconnect`：`https://webimages.yingmotors.com`。
+
 `app.js` 在 `DOMContentLoaded` 里按顺序：挂头尾 → 应用 i18n → 首页卡片 / 目录筛选 / 详情 / 表单。详情页是 JS 生成 DOM，生成后再跑一次 `applyI18n()`。
 
 ### 2.9 上线注意
 
-- 上传整个站点目录，保证 `css/`、`js/`、`assets/`、`images/` 相对路径不变。
-- `motorspicture/` 原图体积大且含 HEIC，生产环境可不传，只保留 `images/`。
+- 上传 `css/`、`js/`、`assets/`、`contact/` 和 HTML；**现车图不必随站点目录上传**，以 R2 `webimages.yingmotors.com` 为准。
+- `images/products/`、`motorspicture/` 原图体积大且含 HEIC，生产环境可不传。
 - 若以后有独立域名，把 `index.html` 里的 `og:image` 改成绝对 URL。
 - 参数表是实拍上看清的信息或该型号常规数据（见 **4.5**）。详情页另有全站免责声明：典型参考值，最终以合同 / 技术协议为准。
+- **搜索收录不会随 Cloudflare 上线自动出现。** 部署后必须自己提交：
+  1. Cloudflare：打开 **Always Use HTTPS**（现在访问 `http://` 会 522）；不要开 Bot Fight Mode / I’m Under Attack，或确认没有拦截 Googlebot / Baiduspider。
+  2. 上传本仓库的 `robots.txt`、`sitemap.xml`、`sitemap.html`。
+  3. [Google Search Console](https://search.google.com/search-console) 验证 **https://yingmotors.com/**（不要只验证 www），提交 `https://yingmotors.com/sitemap.xml`，再用 URL 检查首页并「请求编入索引」。
+  4. [百度搜索资源平台](https://ziyuan.baidu.com/) 同样验证并提交 sitemap。百度几乎不主动抓未提交的海外静态站；没有 ICP 的 `.com` 在百度排名也会偏弱，外贸询盘以 Google 为主。
+- 加删现车后运行 `python docs/build_sitemap.py`，把新的 sitemap 一并上传。
 
 ---
 
@@ -220,18 +245,22 @@ WhatsApp 预填文案由 `YM.whatsappLink(product)` 生成，会带上当前语�
 | 要改什么 | 改哪里 |
 | --- | --- |
 | 导航 / 首页句子 | `js/i18n.js` |
-| 增减现车 | `js/i18n.js` 不用动；改 `js/products.js` |
+| 增减现车 | `js/i18n.js` 不用动；改 `js/products.js`，图上传 R2 |
 | 产品名称 / 简介 / 参数 | `js/products.js` 的 `en` / `zh`（写法见 **4.5**） |
+| 现车图 CDN 根路径 | `js/products.js` 顶部 `YM_IMAGES_BASE` |
 | 电话、邮箱、WhatsApp | `js/app.js`、`js/products.js` 的链接函数，以及 `contact.html` 展示文本 |
 | 询盘表发到哪个邮箱 | `js/app.js` 顶部 `YM.WEB3FORMS_ACCESS_KEY`（见 **2.6**）；收件箱由申请 key 的邮箱决定 |
 | 颜色、间距、手机菜单 | `css/styles.css` |
 | Logo / 浏览器图标 | `assets/` |
+| Agent 开发约定 | `.cursor/skills/yingmotors-web/` |
 
 ---
 
 ## 4. 日常维护（改图 / 加车 / 删车）
 
-网站没有后台。现车全部写在 `js/products.js`，网页只引用 `images/stock/{sku}_{id}/` 下的 **英文路径 JPG / MP4**。原片放在 `images/products/`，不要把中文文件夹或 `.heic` 写进网页。同一 Stock No. 的图、视频、描述（`{sku}_description.md`）必须在同一文件夹。
+网站没有后台。现车全部写在 `js/products.js`。制图在本地 `images/stock/{sku}_{id}/`（英文路径 JPG / MP4），**网页通过 R2 加载同一相对路径**。原片放在 `images/products/`，不要把中文文件夹或 `.heic` 写进网页。同一 Stock No. 的图、视频、描述（`{sku}_description.md`）必须在同一文件夹。
+
+Agent 逐步清单与 Skill 相同：`.cursor/skills/yingmotors-web/reference.md`。
 
 改完后用 `python -m http.server 8080` 打开对应页面核对；再运行：
 
@@ -239,7 +268,7 @@ WhatsApp 预填文案由 `YM.whatsappLink(product)` 生成，会带上当前语�
 python E:\codePrj\web\docs\build_product_datasheet.py
 ```
 
-刷新 `docs/Yingmotors-产品媒体资料.xlsx`，作为库存台账。
+刷新 `docs/` 下由脚本生成的产品媒体资料表（`build_product_datasheet.py` 输出 `Yingmotors-product-media-datasheet.xlsx`），作为库存台账。脚本扫描**本地** `images/stock/`，不访问 R2。
 
 先在 Excel 里查 `product_id`（即详情地址 `product.html?id=...`）。
 
@@ -250,9 +279,10 @@ python E:\codePrj\web\docs\build_product_datasheet.py
 3. **同时更新缩略图：** 覆盖 `images/stock/{sku}_{id}/thumbs/{sku}_01.jpg`（列表和首页卡片用这张）。建议约 960×600、16:10。
 4. **多拍了几张：** 按顺序加 `{sku}_03.jpg`、`{sku}_04.jpg`…，并各做一张 `thumbs/{sku}_0x.jpg`。然后改 `products.js` 顶部对应的 `ymStock("sku", "id", 张数)`，把张数改成新数量。
 5. **换视频：** 覆盖 `{sku}_v01.mp4` 等；新增则加 `{sku}_v03.mp4`，并在该产品的 `videos: ymVid("sku", "id", ["v01.mp4", ...])` 里补文件名。建议无声、H.264。
-6. 浏览器强制刷新（Ctrl+F5）看 `product.html?id=该id` 和 `products.html`。
+6. 把更新后的 JPG / thumbs / mp4 **上传到 R2**（键 `web/images/stock/{sku}_{id}/...`）。只改本地不传 R2，线上仍是旧图。
+7. 浏览器强制刷新（Ctrl+F5）看 `product.html?id=该id` 和 `products.html`。
 
-原片可另存一份到 `images/products/NEW` 或 `USED` 对应夹，便于存档。网页仍只读 `images/stock/`。
+原片可另存一份到 `images/products/NEW` 或 `USED` 对应夹，便于存档。网页运行时读 R2，不再用相对路径 `images/stock/`。
 
 HEIC 需先转 JPG 再覆盖 stock，例如：
 
@@ -269,43 +299,47 @@ python -c "from PIL import Image; from pillow_heif import register_heif_opener; 
    - `images/stock/YM-NTK-002_new-howo-cargo/thumbs/YM-NTK-002_01.jpg`…
    - 有视频则 `YM-NTK-002_v01.mp4`…
    - 产品描述 `YM-NTK-002_description.md`（与图、视频同夹）
-4. 打开 `js/products.js`：
+4. 打水印（如需），将整个 `{sku}_{id}` 目录上传到 R2：`web/images/stock/{sku}_{id}/`。
+5. 打开 `js/products.js`：
    - 顶部增加：`var _xx = ymStock("YM-NTK-002", "new-howo-cargo", 4);`（张数与文件一致）
    - 在 `YM_PRODUCTS` 数组里 **复制一条相近车型**，改这些字段：
 
 | 字段 | 填什么 |
 | --- | --- |
 | `id` | 与文件夹名一致，如 `new-howo-cargo` |
+| `sku` | 如 `YM-NTK-002`，规则见 4.5 |
 | `category` | `new` 或 `used` |
-| `type` | `truck` 重卡 / `trailer` 挂车 / `tricycle` 三轮 / `fourwheel` 四轮 / `bus` 客车 / `excavator` 挖机 / `mixer` 搅拌 / `special` 环卫 |
+| `type` | `truck` 重卡 / `trailer` 挂车 / `tricycle` 三轮 / `fourwheel` 四轮 / `bus` 客车 / `excavator` 挖机 / `loader` 装载机 / `mixer` 搅拌 / `special` 环卫 |
 | `brand` | 品牌英文，如 HOWO |
 | `images` / `thumb` | `_xx.images`、`_xx.thumb` |
 | `videos` | 可选，`ymVid("YM-NTK-002", "new-howo-cargo", ["v01.mp4"])` |
 | `en` / `zh` | `name`、`subtitle`、`summary`、`highlights`、`specs` 中英都写（**怎么从图片写，见 4.5**） |
 
-5. 若要出现在首页「现车实拍」，把 id 加进文件末尾的 `YM_FEATURED_IDS`（建议不超过 6 条）。
-6. 打开 `products.html` 用对应筛选确认能出来；再打开 `product.html?id=新id`。
-7. 重新生成 Excel 资料表。
+6. 若要出现在首页「现车实拍」，把 id 加进文件末尾的 `YM_FEATURED_IDS`（建议不超过 6 条）。
+7. 打开 `products.html` 用对应筛选确认能出来；再打开 `product.html?id=新id`。
+8. 重新生成 Excel 资料表。
 
-`type` 决定筛选：三轮+四轮走「三轮/四轮」；挖机+搅拌+环卫走「工程机械」。
+`type` 决定筛选：三轮+四轮走「三轮/四轮」；挖机+装载机+搅拌+环卫走「工程机械」。
 
 ### 4.3 有产品车型要删除
 
 1. 在 `js/products.js` 的 `YM_PRODUCTS` 里删掉整条对象（从 `{` 到 `},`）。
 2. 若该 id 在 `YM_FEATURED_IDS` 里，一并删掉，否则首页会少一张卡或空白。
 3. 顶部若有仅这一台使用的 `var _xx = ymStock(...)`，可以删掉，避免遗留。
-4. `images/stock/{sku}_{id}/` 文件夹可删除（网页不再引用）。`images/products/` 原片是否保留自己决定，建议先移到备份夹而不是直接扔掉。
+4. `images/stock/{sku}_{id}/` 文件夹可删除；R2 上 `web/images/stock/{sku}_{id}/` 一并删，避免线上脏文件。`images/products/` 原片是否保留自己决定，建议先移到备份夹而不是直接扔掉。
 5. 重新生成 Excel。资料表 **10_未引用** 里会列出磁盘上还有、网站已不挂的文件，便于清理。
 
 不要只删图片不删 JS：详情链接还会在，会变成裂图。不要只删 JS 不删首页推荐 id。
 
 ### 4.4 改完必查
 
-- [ ] `products.html` 列表图正常
+- [ ] `products.html` 列表图从 R2 加载正常
 - [ ] `product.html?id=...` 大图、缩略图、视频
 - [ ] 中英文切换后名称和参数都对
 - [ ] 首页推荐位（若动过 `YM_FEATURED_IDS`）
-- [ ] 已刷新 `docs/Yingmotors-产品媒体资料.xlsx`
+- [ ] 对应文件已上传 / 已从 R2 删除
+- [ ] 已刷新 `docs/Yingmotors-product-media-datasheet.xlsx`
+- [ ] 已运行 `python docs/build_sitemap.py`，新的 `sitemap.xml` / `sitemap.html` 已上传
 
 ### 4.5 产品描述怎么从图片写进 `products.js`
 
