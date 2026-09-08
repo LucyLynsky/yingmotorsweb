@@ -170,7 +170,7 @@ def parse_products(src: str, helpers: dict) -> list[dict]:
         p["featured"] = "Y" if p["id"] in featured else "N"
         p["category_zh"] = "新车" if p["category"] == "new" else "二手"
         p["category_en"] = "New" if p["category"] == "new" else "Used"
-        p["detail_url"] = f"product.html?id={p['id']}"
+        p["detail_url"] = f"product/{p['id']}.html"
         p["filter_url"] = f"products.html?cat={p['type']}"
         if p["type"] in ("tricycle", "fourwheel"):
             p["filter_url"] = "products.html?cat=light"
@@ -407,7 +407,7 @@ def fill_readme(ws, products, media):
         ("", ""),
         ("字段约定", ""),
         ("sku", "对外现车编号 YM-{N|U}{TYPE}-{NNN}。N=新车 U=二手；TK重卡 TL挂车 TC三轮 FW四轮 BS客车 EX挖掘机 LD装载机 MX搅拌车 SP环卫。同类序号不复用。"),
-        ("product_id", "网站 URL：product.html?id=该字段，也可用 sku 打开同一页"),
+        ("product_id", "网站 URL：product/{product_id}.html，也可用 product.html?id=sku 跳转同一页"),
         ("状态", "new=新车 / used=二手"),
         ("分类", "对应 js 里的 type，以及 products.html?cat= 筛选"),
         ("web_path", "网站相对路径，部署后保持此相对位置"),

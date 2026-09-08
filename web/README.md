@@ -121,7 +121,8 @@ python -m http.server 8080
 E:\codePrj\web\
   index.html              首页
   products.html           现车目录
-  product.html            详情（?id=产品ID 或 SKU）
+  product.html            旧详情地址（?id= 跳转到 product/{id}.html）
+  product/{id}.html       预渲染详情（build_sitemap.py 生成，须上传）
   custom.html             定制说明
   about.html / contact.html
   css/styles.css          全站样式
@@ -154,7 +155,7 @@ E:\codePrj\web\
 
 一条产品最少包含：
 
-- `id`：URL 用，如 `product.html?id=komatsu-pc200`
+- `id`：URL 用，如 `product/used-howo-dump-red.html`
 - `category`：`new` 或 `used`（筛选「新车 / 二手」）
 - `type`：`truck` / `trailer` / `tricycle` / `fourwheel` / `bus` / `excavator` / `loader` / `mixer` / `special`
 - `brand`、`images[]`、`thumb`，可选 `videos[]`
@@ -227,16 +228,16 @@ WhatsApp 预填文案由 `YM.whatsappLink(product)` 生成，会带上当前语�
 
 ### 2.9 上线注意
 
-- 上传 `css/`、`js/`、`assets/`、`contact/` 和 HTML；**现车图不必随站点目录上传**，以 R2 `webimages.yingmotors.com` 为准。
+- 上传 `css/`、`js/`、`assets/`、`contact/`、`product/` 和 HTML；**现车图不必随站点目录上传**，以 R2 `webimages.yingmotors.com` 为准。
 - `images/products/`、`motorspicture/` 原图体积大且含 HEIC，生产环境可不传。
 - 若以后有独立域名，把 `index.html` 里的 `og:image` 改成绝对 URL。
 - 参数表是实拍上看清的信息或该型号常规数据（见 **4.5**）。详情页另有全站免责声明：典型参考值，最终以合同 / 技术协议为准。
 - **搜索收录不会随 Cloudflare 上线自动出现。** 部署后必须自己提交：
   1. Cloudflare：打开 **Always Use HTTPS**（现在访问 `http://` 会 522）；不要开 Bot Fight Mode / I’m Under Attack，或确认没有拦截 Googlebot / Baiduspider。
-  2. 上传本仓库的 `robots.txt`、`sitemap.xml`、`sitemap.html`。
+  2. 上传本仓库的 `robots.txt`、`sitemap.xml`、`sitemap.html` 和整个 `product/` 目录。
   3. [Google Search Console](https://search.google.com/search-console) 验证 **https://yingmotors.com/**（不要只验证 www），提交 `https://yingmotors.com/sitemap.xml`，再用 URL 检查首页并「请求编入索引」。
   4. [百度搜索资源平台](https://ziyuan.baidu.com/) 同样验证并提交 sitemap。百度几乎不主动抓未提交的海外静态站；没有 ICP 的 `.com` 在百度排名也会偏弱，外贸询盘以 Google 为主。
-- 加删现车后运行 `python docs/build_sitemap.py`，把新的 sitemap 一并上传。
+- 加删现车后运行 `python docs/build_sitemap.py`，把新的 `product/*.html`、`sitemap.xml`、`sitemap.html` 一并上传。
 
 ---
 
@@ -270,7 +271,7 @@ python E:\codePrj\web\docs\build_product_datasheet.py
 
 刷新 `docs/` 下由脚本生成的产品媒体资料表（`build_product_datasheet.py` 输出 `Yingmotors-product-media-datasheet.xlsx`），作为库存台账。脚本扫描**本地** `images/stock/`，不访问 R2。
 
-先在 Excel 里查 `product_id`（即详情地址 `product.html?id=...`）。
+先在 Excel 里查 `product_id`（即详情地址 `product/{id}.html`）。
 
 ### 4.1 有产品图片（或视频）要修改
 
@@ -280,7 +281,7 @@ python E:\codePrj\web\docs\build_product_datasheet.py
 4. **多拍了几张：** 按顺序加 `{sku}_03.jpg`、`{sku}_04.jpg`…，并各做一张 `thumbs/{sku}_0x.jpg`。然后改 `products.js` 顶部对应的 `ymStock("sku", "id", 张数)`，把张数改成新数量。
 5. **换视频：** 覆盖 `{sku}_v01.mp4` 等；新增则加 `{sku}_v03.mp4`，并在该产品的 `videos: ymVid("sku", "id", ["v01.mp4", ...])` 里补文件名。建议无声、H.264。
 6. 把更新后的 JPG / thumbs / mp4 **上传到 R2**（键 `web/images/stock/{sku}_{id}/...`）。只改本地不传 R2，线上仍是旧图。
-7. 浏览器强制刷新（Ctrl+F5）看 `product.html?id=该id` 和 `products.html`。
+7. 浏览器强制刷新（Ctrl+F5）看 `product/{id}.html` 和 `products.html`。再运行 `python docs/build_sitemap.py`。
 
 原片可另存一份到 `images/products/NEW` 或 `USED` 对应夹，便于存档。网页运行时读 R2，不再用相对路径 `images/stock/`。
 
@@ -316,7 +317,7 @@ python -c "from PIL import Image; from pillow_heif import register_heif_opener; 
 | `en` / `zh` | `name`、`subtitle`、`summary`、`highlights`、`specs` 中英都写（**怎么从图片写，见 4.5**） |
 
 6. 若要出现在首页「现车实拍」，把 id 加进文件末尾的 `YM_FEATURED_IDS`（建议不超过 6 条）。
-7. 打开 `products.html` 用对应筛选确认能出来；再打开 `product.html?id=新id`。
+7. 打开 `products.html` 用对应筛选确认能出来；再打开 `product/{新id}.html`。然后运行 `python docs/build_sitemap.py`。
 8. 重新生成 Excel 资料表。
 
 `type` 决定筛选：三轮+四轮走「三轮/四轮」；挖机+装载机+搅拌+环卫走「工程机械」。
@@ -334,12 +335,12 @@ python -c "from PIL import Image; from pillow_heif import register_heif_opener; 
 ### 4.4 改完必查
 
 - [ ] `products.html` 列表图从 R2 加载正常
-- [ ] `product.html?id=...` 大图、缩略图、视频
+- [ ] `product/{id}.html` 大图、缩略图、视频
+- [ ] 已运行 `python docs/build_sitemap.py`，新的 sitemap 与 `product/*.html` 已上传
 - [ ] 中英文切换后名称和参数都对
 - [ ] 首页推荐位（若动过 `YM_FEATURED_IDS`）
 - [ ] 对应文件已上传 / 已从 R2 删除
 - [ ] 已刷新 `docs/Yingmotors-product-media-datasheet.xlsx`
-- [ ] 已运行 `python docs/build_sitemap.py`，新的 `sitemap.xml` / `sitemap.html` 已上传
 
 ### 4.5 产品描述怎么从图片写进 `products.js`
 
@@ -361,7 +362,7 @@ python -c "from PIL import Image; from pillow_heif import register_heif_opener; 
 
 | 字段 | 详情页位置 | 从哪来 |
 | --- | --- | --- |
-| `id` | 网址 `product.html?id=...` | 自己定的英文文件夹名，图上没有 |
+| `id` | 网址 `product/{id}.html` | 自己定的英文文件夹名，图上没有 |
 | `sku` | 现车编号，如 `YM-UMX-002` | 按规则编：`YM-` + N/U + 类型缩写 + 序号。图上没有 |
 | `category` | 徽章「新车 / 二手」 | 原图在 `NEW/` 还是 `USED/`（或 `used/`） |
 | `type` | 筛选分类 | 车型（罐=mixer，牵引/自卸=truck…） |
@@ -377,11 +378,11 @@ python -c "from PIL import Image; from pillow_heif import register_heif_opener; 
 
 详情页底部那句「参数为典型参考值，最终以合同 / 技术协议为准」来自 `js/i18n.js` 的 `detail_note`，全站共用，不要写进某一台车的 `summary`。
 
-`product.html` 是空壳。`js/app.js` 的 `YM.mountProductDetail()` 用 `?id=` 找到产品，按当前语言取 `en` 或 `zh`，再填进标题、导语、简介、要点和参数表。
+`product/{id}.html` 由 `docs/build_sitemap.py` 预渲染：品名、简介、参数写在 HTML 里，Google 不跑 JS 也能抓到。`js/app.js` 的 `YM.mountProductDetail()` 再按当前语言补全图册、视频和询盘。旧地址 `product.html?id=` 会跳转到静态页。
 
 #### 实例：陕汽搅拌车 `used-shacman-mixer`
 
-原片：`images/product pictures20260830/used/Mixing tank/` 一辆白色搅拌车。转入 `images/stock/YM-UMX-002_used-shacman-mixer/YM-UMX-002_01.jpg` 后看图填写（详情 `product.html?id=used-shacman-mixer`）：
+原片：`images/product pictures20260830/used/Mixing tank/` 一辆白色搅拌车。转入 `images/stock/YM-UMX-002_used-shacman-mixer/YM-UMX-002_01.jpg` 后看图填写（详情 `product/used-shacman-mixer.html`）：
 
 | 图上看到的 | 写成的文案 |
 | --- | --- |

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://yingmotors.com/</loc>
     <lastmod>2026-09-08</lastmod>
@@ -28,206 +29,366 @@
   <url>
     <loc>https://yingmotors.com/sitemap.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.4</priority>
+    <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-howo-tractor</loc>
+    <loc>https://yingmotors.com/product/used-howo-tractor.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UTK-001_used-howo-tractor/YM-UTK-001_01.jpg</image:loc>
+      <image:title>Used HOWO / SINOTRUK Tractor</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-sitrak-c9h</loc>
+    <loc>https://yingmotors.com/product/used-sitrak-c9h.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UTK-002_used-sitrak-c9h/YM-UTK-002_01.jpg</image:loc>
+      <image:title>Used SITRAK Tractor (Orange)</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-sitrak-g7s</loc>
+    <loc>https://yingmotors.com/product/used-sitrak-g7s.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UTK-003_used-sitrak-g7s/YM-UTK-003_01.jpg</image:loc>
+      <image:title>Used SITRAK G7S Tractor</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-shacman-f3000</loc>
+    <loc>https://yingmotors.com/product/used-shacman-f3000.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UTK-004_used-shacman-f3000/YM-UTK-004_01.jpg</image:loc>
+      <image:title>Used SHACMAN Delong F3000</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-shacman-x3000</loc>
+    <loc>https://yingmotors.com/product/used-shacman-x3000.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UTK-005_used-shacman-x3000/YM-UTK-005_01.jpg</image:loc>
+      <image:title>Used SHACMAN X3000 Tractor</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-howo-dump</loc>
+    <loc>https://yingmotors.com/product/used-howo-dump.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UTK-006_used-howo-dump/YM-UTK-006_01.jpg</image:loc>
+      <image:title>Used SINOTRUK Dump Truck</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-howo-dump-yellow</loc>
+    <loc>https://yingmotors.com/product/used-howo-dump-yellow.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UTK-007_used-howo-dump-yellow/YM-UTK-007_01.jpg</image:loc>
+      <image:title>Used HOWO Dump Truck (Yellow)</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-howo-dump-white-grey</loc>
+    <loc>https://yingmotors.com/product/used-howo-dump-white-grey.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UTK-008_used-howo-dump-white-grey/YM-UTK-008_01.jpg</image:loc>
+      <image:title>Used HOWO Dump Truck (White / Grey)</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-howo-dump-red</loc>
+    <loc>https://yingmotors.com/product/used-howo-dump-red.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UTK-010_used-howo-dump-red/YM-UTK-010_01.jpg</image:loc>
+      <image:title>Used HOWO 430 Dump Truck (Red)</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-howo-371</loc>
+    <loc>https://yingmotors.com/product/used-howo-371.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UTK-011_used-howo-371/YM-UTK-011_01.jpg</image:loc>
+      <image:title>Used HOWO 371 (Red)</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-weichai-wt110</loc>
+    <loc>https://yingmotors.com/product/used-weichai-wt110.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UTK-013_used-weichai-wt110/YM-UTK-013_01.jpg</image:loc>
+      <image:title>Used Weichai WT110 Mining Dump</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-howo-vacuum</loc>
+    <loc>https://yingmotors.com/product/used-howo-vacuum.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-USP-001_used-howo-vacuum/YM-USP-001_01.jpg</image:loc>
+      <image:title>HOWO Jetting &amp; Vacuum Truck</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-howo-stake</loc>
+    <loc>https://yingmotors.com/product/new-howo-stake.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTK-001_new-howo-stake/YM-NTK-001_01.jpg</image:loc>
+      <image:title>HOWO High-side Cargo Truck</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-special-box</loc>
+    <loc>https://yingmotors.com/product/new-special-box.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTL-001_new-special-box/YM-NTL-001_01.jpg</image:loc>
+      <image:title>Special Ventilated Box Trailer</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-dump-hyva</loc>
+    <loc>https://yingmotors.com/product/new-dump-hyva.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTL-002_new-dump-hyva/YM-NTL-002_01.jpg</image:loc>
+      <image:title>U-shape Dump Semi-Trailer (HYVA)</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-dump-sunhunk</loc>
+    <loc>https://yingmotors.com/product/new-dump-sunhunk.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTL-003_new-dump-sunhunk/YM-NTL-003_01.jpg</image:loc>
+      <image:title>U-shape Dump Semi-Trailer (SUNHUNK)</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-dump-green</loc>
+    <loc>https://yingmotors.com/product/new-dump-green.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTL-004_new-dump-green/YM-NTL-004_01.jpg</image:loc>
+      <image:title>Green U-shape Dump Semi-Trailer</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-van-red</loc>
+    <loc>https://yingmotors.com/product/new-van-red.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTL-005_new-van-red/YM-NTL-005_01.jpg</image:loc>
+      <image:title>Red Van Semi-Trailer</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-dropside-red</loc>
+    <loc>https://yingmotors.com/product/new-dropside-red.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTL-006_new-dropside-red/YM-NTL-006_01.jpg</image:loc>
+      <image:title>Red Dropside / Fence Semi-Trailer</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-dump-white-red</loc>
+    <loc>https://yingmotors.com/product/new-dump-white-red.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTL-007_new-dump-white-red/YM-NTL-007_01.jpg</image:loc>
+      <image:title>White / Red U-shape Dump Trailer</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-flatbed-blue</loc>
+    <loc>https://yingmotors.com/product/new-flatbed-blue.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTL-008_new-flatbed-blue/YM-NTL-008_01.jpg</image:loc>
+      <image:title>Blue Flatbed Semi-Trailer</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-tricycle-1</loc>
+    <loc>https://yingmotors.com/product/new-tricycle-1.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTC-001_new-tricycle-1/YM-NTC-001_01.jpg</image:loc>
+      <image:title>Blue Cabin Dump Tricycle</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-tricycle-2</loc>
+    <loc>https://yingmotors.com/product/new-tricycle-2.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTC-002_new-tricycle-2/YM-NTC-002_01.jpg</image:loc>
+      <image:title>Red Hydraulic Dump Tricycle</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-tricycle-3</loc>
+    <loc>https://yingmotors.com/product/new-tricycle-3.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTC-003_new-tricycle-3/YM-NTC-003_01.jpg</image:loc>
+      <image:title>Blue Luxury Cargo Tricycle</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-tricycle-4</loc>
+    <loc>https://yingmotors.com/product/new-tricycle-4.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTC-004_new-tricycle-4/YM-NTC-004_01.jpg</image:loc>
+      <image:title>Liba Xiaokang Star Cargo Tricycle</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-tricycle-5</loc>
+    <loc>https://yingmotors.com/product/new-tricycle-5.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTC-005_new-tricycle-5/YM-NTC-005_01.jpg</image:loc>
+      <image:title>Liba Xiaokang Star Cabin Tricycle</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-tricycle-6</loc>
+    <loc>https://yingmotors.com/product/new-tricycle-6.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTC-006_new-tricycle-6/YM-NTC-006_01.jpg</image:loc>
+      <image:title>Red Passenger Tricycle (Tuk-tuk)</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-tricycle-7</loc>
+    <loc>https://yingmotors.com/product/new-tricycle-7.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NTC-007_new-tricycle-7/YM-NTC-007_01.jpg</image:loc>
+      <image:title>Red Cargo Tricycle</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-utv-6wheel</loc>
+    <loc>https://yingmotors.com/product/new-utv-6wheel.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NFW-001_new-utv-6wheel/YM-NFW-001_01.jpg</image:loc>
+      <image:title>Red 6-Wheel Off-road UTV</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=new-4wd-dumper</loc>
+    <loc>https://yingmotors.com/product/new-4wd-dumper.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-NFW-002_new-4wd-dumper/YM-NFW-002_01.jpg</image:loc>
+      <image:title>Ace Small 4WD Mini Dumper</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-komatsu-pc200</loc>
+    <loc>https://yingmotors.com/product/used-komatsu-pc200.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UEX-001_used-komatsu-pc200/YM-UEX-001_01.jpg</image:loc>
+      <image:title>Used Komatsu PC200 Excavator</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-komatsu-pc200-b</loc>
+    <loc>https://yingmotors.com/product/used-komatsu-pc200-b.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UEX-002_used-komatsu-pc200-b/YM-UEX-002_01.jpg</image:loc>
+      <image:title>Used Komatsu PC200 Excavator</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-komatsu-pc130</loc>
+    <loc>https://yingmotors.com/product/used-komatsu-pc130.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UEX-003_used-komatsu-pc130/YM-UEX-003_01.jpg</image:loc>
+      <image:title>Used Komatsu PC130 Excavator</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-komatsu-pc70</loc>
+    <loc>https://yingmotors.com/product/used-komatsu-pc70.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UEX-004_used-komatsu-pc70/YM-UEX-004_01.jpg</image:loc>
+      <image:title>Used Komatsu PC70 Excavator</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-komatsu-pc56</loc>
+    <loc>https://yingmotors.com/product/used-komatsu-pc56.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UEX-005_used-komatsu-pc56/YM-UEX-005_01.jpg</image:loc>
+      <image:title>Used Komatsu PC56 Excavator</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-sdlg-loader</loc>
+    <loc>https://yingmotors.com/product/used-sdlg-loader.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-ULD-001_used-sdlg-loader/YM-ULD-001_01.jpg</image:loc>
+      <image:title>Used SDLG Wheel Loader</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-mixer-cimc</loc>
+    <loc>https://yingmotors.com/product/used-mixer-cimc.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UMX-001_used-mixer-cimc/YM-UMX-001_01.jpg</image:loc>
+      <image:title>Used CIMC Concrete Mixer</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-shacman-mixer</loc>
+    <loc>https://yingmotors.com/product/used-shacman-mixer.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UMX-002_used-shacman-mixer/YM-UMX-002_01.jpg</image:loc>
+      <image:title>Used SHACMAN Mixer (M3000S)</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-bus</loc>
+    <loc>https://yingmotors.com/product/used-bus.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UBS-001_used-bus/YM-UBS-001_01.jpg</image:loc>
+      <image:title>Used Coach Bus (Blue / White)</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://yingmotors.com/product.html?id=used-bus-yutong</loc>
+    <loc>https://yingmotors.com/product/used-bus-yutong.html</loc>
     <lastmod>2026-09-08</lastmod>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://webimages.yingmotors.com/web/images/stock/YM-UBS-002_used-bus-yutong/YM-UBS-002_01.jpg</image:loc>
+      <image:title>Used Yutong Coach (Green)</image:title>
+    </image:image>
   </url>
 </urlset>

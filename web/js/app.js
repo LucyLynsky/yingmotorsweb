@@ -50,15 +50,36 @@ YM.setJsonLd = function (id, data) {
   el.textContent = JSON.stringify(data);
 };
 
+YM.productHref = function (id) {
+  return "product/" + String(id || "") + ".html";
+};
+
+YM.pageProductId = function () {
+  var fromBody = document.body && document.body.getAttribute("data-product-id");
+  if (fromBody) return fromBody;
+  return new URLSearchParams(location.search).get("id") || "";
+};
+
+YM.isProductShell = function () {
+  var file = (location.pathname.split("/").pop() || "").toLowerCase();
+  return file === "product.html";
+};
+
+YM.productSeoTitle = function (name, lang) {
+  var n = String(name || "").replace(/\.$/, "");
+  if (lang === "zh") return n + " | YING MOTORS";
+  if (/\bfor export\b/i.test(n)) return n + " | YING MOTORS";
+  return n + " for Export | YING MOTORS";
+};
+
 YM.applyPageSeo = function () {
-  var page = YM.page();
-  var path = (location.pathname.split("/").pop() || "index.html");
-  var url = YM.SITE + "/";
-  if (path && path !== "index.html") url = YM.absUrl(path + (location.search || ""));
-  if (page !== "products" || path !== "product.html") {
-    YM.setCanonical(url);
-    YM.setMeta("property", "og:url", url);
-  }
+  if (document.body.getAttribute("data-product-id") || YM.isProductShell()) return;
+  var path = location.pathname || "/";
+  var url;
+  if (path === "/" || /\/index\.html$/i.test(path)) url = YM.SITE + "/";
+  else url = YM.SITE + path + (location.search || "");
+  YM.setCanonical(url);
+  YM.setMeta("property", "og:url", url);
 };
 
 YM.applyI18n = function () {
@@ -747,11 +768,16 @@ YM.mountProductList = function () {
 YM.mountProductDetail = function () {
   var root = document.getElementById("product-detail");
   if (!root) return;
-  var id = new URLSearchParams(location.search).get("id");
+  var id = YM.pageProductId();
   var product = YM.productById(id);
   if (!product) {
     YM.setMeta("name", "robots", "noindex, follow");
     root.innerHTML = '<p class="empty" data-i18n="empty"></p>';
+    YM.applyI18n();
+    return;
+  }
+  if (YM.isProductShell()) {
+    location.replace(YM.productHref(product.id));
     return;
   }
   var t = YM.tProduct(product);
@@ -760,9 +786,13 @@ YM.mountProductDetail = function () {
   var skuLabel = lang === "zh" ? "现车编号" : "Stock No.";
   var specRows = product.sku ? [[skuLabel, product.sku]].concat(t.specs) : t.specs;
   var main = product.images[0];
-  var pageUrl = YM.absUrl("product.html?id=" + encodeURIComponent(product.id));
+  var pageUrl = YM.absUrl(YM.productHref(product.id));
   var desc = t.summary || t.subtitle || t.name;
-  document.title = (product.sku ? product.sku + " · " : "") + t.name + " · YING MOTORS";
+  var typeLabel = lang === "zh"
+    ? { truck: "重卡", trailer: "挂车", tricycle: "三轮车", fourwheel: "四轮", bus: "客车", excavator: "挖掘机", loader: "装载机", mixer: "搅拌车", special: "环卫车" }[product.type] || YM.t("nav_products")
+    : { truck: "Trucks", trailer: "Trailers", tricycle: "Tricycles", fourwheel: "UTV / 4WD", bus: "Buses", excavator: "Excavators", loader: "Loaders", mixer: "Mixers", special: "Sanitation" }[product.type] || "Stock";
+  var catFilter = (product.type === "tricycle" || product.type === "fourwheel") ? "light" : product.type;
+  document.title = YM.productSeoTitle(t.name, lang);
   YM.setCanonical(pageUrl);
   YM.setMeta("name", "description", desc);
   YM.setMeta("property", "og:title", document.title);
@@ -770,12 +800,13 @@ YM.mountProductDetail = function () {
   YM.setMeta("property", "og:url", pageUrl);
   YM.setMeta("property", "og:image", YM.absUrl(main || "assets/og-image.jpg"));
   YM.setMeta("property", "og:type", "website");
+  YM.setMeta("property", "og:site_name", "YING MOTORS");
   YM.setJsonLd("product-jsonld", {
     "@context": "https://schema.org",
     "@type": "Vehicle",
     name: t.name,
     sku: product.sku || product.id,
-    brand: product.brand,
+    brand: { "@type": "Brand", name: product.brand },
     description: desc,
     image: (product.images || []).map(function (src) { return YM.absUrl(src); }),
     url: pageUrl,
@@ -783,10 +814,19 @@ YM.mountProductDetail = function () {
       "@type": "Offer",
       availability: "https://schema.org/InStock",
       url: pageUrl,
-      seller: { "@type": "Organization", name: "Shandong Yingmotors Co.,Ltd" }
+      seller: { "@type": "Organization", name: "Shandong Yingmotors Co.,Ltd", url: YM.SITE + "/" }
     }
   });
   root.innerHTML =
+    '<nav class="crumbs" aria-label="Breadcrumb">' +
+      '<a href="index.html" data-i18n="nav_home">Home</a>' +
+      '<span aria-hidden="true"> / </span>' +
+      '<a href="products.html" data-i18n="nav_products">Stock</a>' +
+      '<span aria-hidden="true"> / </span>' +
+      '<a href="products.html?cat=' + catFilter + '">' + typeLabel + "</a>" +
+      '<span aria-hidden="true"> / </span>' +
+      "<span>" + t.name + "</span>" +
+    "</nav>" +
     '<a class="back-link" href="products.html" data-i18n="detail_back"></a>' +
     '<div class="detail-grid">' +
       '<div class="detail-gallery">' +

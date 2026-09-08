@@ -1100,8 +1100,8 @@ YM.productRef = function (product) {
 };
 
 YM.pageProduct = function () {
-  var id = new URLSearchParams(location.search).get("id");
-  return YM.productById(id || "");
+  var id = (YM.pageProductId && YM.pageProductId()) || new URLSearchParams(location.search).get("id") || "";
+  return YM.productById(id);
 };
 
 YM.skuOf = function (product, fallback) {
@@ -1166,7 +1166,7 @@ YM.renderCards = function (target, products, options) {
       ? (lang === "zh" ? "二手" : "Used")
       : (lang === "zh" ? "新车" : "New");
     return (
-      '<a class="card" href="product.html?id=' + p.id + '">' +
+      '<a class="card" href="product/' + p.id + '.html">' +
         '<div class="card-media">' +
           '<img src="' + p.thumb + '" alt="' + t.name + '" loading="lazy">' +
           '<span class="badge">' + badge + "</span>" +

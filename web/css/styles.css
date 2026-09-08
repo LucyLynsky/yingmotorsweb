@@ -458,6 +458,20 @@ a.filter-chip { display: inline-flex; align-items: center; color: inherit; }
   z-index: 8;
 }
 .detail-wx .btn { display: inline-flex; align-items: center; gap: 8px; }
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.crumbs a { color: var(--muted); }
+.crumbs a:hover { color: var(--gold); }
+.crumbs span:last-child { color: var(--ink); }
+.stock-fallback { list-style: none; padding: 0; margin: 16px 0 0; }
+.stock-fallback li { margin: 6px 0; }
 .back-link { color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.8rem; }
 .specs-block { margin-top: 56px; }
 .spec-table { width: 100%; border-collapse: collapse; margin: 16px 0 12px; background: #fff; }
