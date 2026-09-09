@@ -16,11 +16,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install rclone
-        run: |
-          curl https://rclone.org/install.sh | sudo bash
-          rclone version
-
       - name: Prepare site files
         run: |
           test -f web/index.html
@@ -44,29 +39,68 @@ jobs:
           ALI_OSS_ENDPOINT: ${{ secrets.ALI_OSS_ENDPOINT }}
           ALI_OSS_BUCKET: ${{ secrets.ALI_OSS_BUCKET }}
         run: |
-          set -euo pipefail
-          if [ -z "${ALI_ACCESS_KEY_ID:-}" ] || [ -z "${ALI_ACCESS_KEY_SECRET:-}" ] || [ -z "${ALI_OSS_ENDPOINT:-}" ] || [ -z "${ALI_OSS_BUCKET:-}" ]; then
-            echo "Missing secrets. Need ALI_ACCESS_KEY_ID, ALI_ACCESS_KEY_SECRET, ALI_OSS_ENDPOINT, ALI_OSS_BUCKET"
-            exit 1
-          fi
+          python3 -m pip install -q oss2
+          python3 <<'PY'
+          import mimetypes
+          import os
+          import re
+          import sys
+          from pathlib import Path
 
-          ENDPOINT="${ALI_OSS_ENDPOINT#https://}"
-          ENDPOINT="${ENDPOINT#http://}"
-          ENDPOINT="${ENDPOINT%/}"
-          BUCKET="${ALI_OSS_BUCKET#oss://}"
-          BUCKET="${BUCKET%/}"
+          import oss2
 
-          echo "Endpoint: $ENDPOINT"
-          echo "Bucket: $BUCKET"
+          ak = os.environ.get("ALI_ACCESS_KEY_ID", "").strip().strip('"').strip("'")
+          sk = os.environ.get("ALI_ACCESS_KEY_SECRET", "").strip().strip('"').strip("'")
+          endpoint = os.environ.get("ALI_OSS_ENDPOINT", "").strip().strip('"').strip("'")
+          bucket_name = os.environ.get("ALI_OSS_BUCKET", "").strip().strip('"').strip("'")
 
-          export RCLONE_CONFIG_OSS_TYPE=s3
-          export RCLONE_CONFIG_OSS_PROVIDER=Alibaba
-          export RCLONE_CONFIG_OSS_ACCESS_KEY_ID="$ALI_ACCESS_KEY_ID"
-          export RCLONE_CONFIG_OSS_SECRET_ACCESS_KEY="$ALI_ACCESS_KEY_SECRET"
-          export RCLONE_CONFIG_OSS_ENDPOINT="$ENDPOINT"
-          export RCLONE_CONFIG_OSS_NO_CHECK_BUCKET=true
+          print(f"AccessKeyId length={len(ak)} prefix={ak[:4]!r}")
+          print(f"AccessKeySecret length={len(sk)}")
+          print(f"Endpoint raw={endpoint!r}")
+          print(f"Bucket raw={bucket_name!r}")
 
-          rclone lsf "oss:${BUCKET}" --max-depth 1 >/dev/null
-          rclone sync ./dist "oss:${BUCKET}" \
-            --progress \
-            --s3-no-check-bucket
+          if not all([ak, sk, endpoint, bucket_name]):
+              print("::error::GitHub Secrets 缺失或名称不对。需要：ALI_ACCESS_KEY_ID, ALI_ACCESS_KEY_SECRET, ALI_OSS_ENDPOINT, ALI_OSS_BUCKET")
+              sys.exit(1)
+
+          endpoint = re.sub(r"^https?://", "", endpoint).strip("/")
+          bucket_name = re.sub(r"^oss://", "", bucket_name).strip("/")
+          match = re.search(r"(oss-[a-z0-9-]+\.aliyuncs\.com)$", endpoint)
+          if match:
+              endpoint = match.group(1)
+
+          print(f"Using endpoint=https://{endpoint}")
+          print(f"Using bucket={bucket_name}")
+
+          auth = oss2.Auth(ak, sk)
+          bucket = oss2.Bucket(auth, f"https://{endpoint}", bucket_name)
+
+          try:
+              listed = list(oss2.ObjectIterator(bucket, max_keys=1))
+              print(f"OSS reachable, sample objects={len(listed)}")
+          except oss2.exceptions.OssError as e:
+              print(f"::error::OSS 访问失败: status={e.status} code={e.code} message={e.message} request_id={e.request_id}")
+              print("请核对：1) Secrets 名称和值 2) Endpoint 必须是桶所在地域 3) Bucket 只填桶名 4) RAM 要有 ListObjects/PutObject 5) 桶不要限制为仅国内 IP")
+              sys.exit(1)
+
+          root = Path("dist")
+          local_keys = set()
+          for path in root.rglob("*"):
+              if not path.is_file():
+                  continue
+              key = path.relative_to(root).as_posix()
+              local_keys.add(key)
+              headers = {}
+              ctype, _ = mimetypes.guess_type(path.name)
+              if ctype:
+                  headers["Content-Type"] = ctype
+              bucket.put_object_from_file(key, str(path), headers=headers)
+              print(f"uploaded {key}")
+
+          remote_keys = {obj.key for obj in oss2.ObjectIterator(bucket) if not obj.key.endswith("/")}
+          for key in sorted(remote_keys - local_keys):
+              bucket.delete_object(key)
+              print(f"deleted {key}")
+
+          print(f"done. uploaded={len(local_keys)} deleted={len(remote_keys - local_keys)}")
+          PY
