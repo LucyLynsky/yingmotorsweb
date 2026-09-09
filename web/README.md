@@ -228,7 +228,7 @@ WhatsApp 预填文案由 `YM.whatsappLink(product)` 生成，会带上当前语�
 
 ### 2.9 上线注意
 
-- 上传 `css/`、`js/`、`assets/`、`contact/`、`product/` 和 HTML；**现车图不必随站点目录上传**，以 R2 `webimages.yingmotors.com` 为准。
+- 上传 `css/`、`js/`、`assets/`、`contact/`、`product/`、根目录 `favicon.ico` 和 HTML。Google 搜索结果旁的小图标来自首页的 `rel="icon"`（需正方形、大于 48px 的 PNG）。**现车图不必随站点目录上传**，以 R2 `webimages.yingmotors.com` 为准。
 - `images/products/`、`motorspicture/` 原图体积大且含 HEIC，生产环境可不传。
 - 若以后有独立域名，把 `index.html` 里的 `og:image` 改成绝对 URL。
 - 参数表是实拍上看清的信息或该型号常规数据（见 **4.5**）。详情页另有全站免责声明：典型参考值，最终以合同 / 技术协议为准。

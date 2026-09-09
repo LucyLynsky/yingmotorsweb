@@ -2,10 +2,13 @@
   "name": "YING MOTORS",
   "short_name": "YING MOTORS",
   "icons": [
-    { "src": "assets/favicon-32.png", "sizes": "32x32", "type": "image/png" },
-    { "src": "assets/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+    { "src": "/assets/favicon-96.png", "sizes": "96x96", "type": "image/png" },
+    { "src": "/assets/favicon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/favicon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/assets/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
   ],
   "theme_color": "#210E06",
   "background_color": "#140C08",
-  "display": "browser"
+  "display": "browser",
+  "start_url": "/"
 }
