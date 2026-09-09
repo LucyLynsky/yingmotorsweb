@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Prepare site files
         run: |
@@ -44,7 +44,9 @@ jobs:
           import mimetypes
           import os
           import re
+          import socket
           import sys
+          import traceback
           from pathlib import Path
 
           import oss2
@@ -63,8 +65,12 @@ jobs:
               print("::error::GitHub Secrets 缺失或名称不对。需要：ALI_ACCESS_KEY_ID, ALI_ACCESS_KEY_SECRET, ALI_OSS_ENDPOINT, ALI_OSS_BUCKET")
               sys.exit(1)
 
-          endpoint = re.sub(r"^https?://", "", endpoint).strip("/")
-          bucket_name = re.sub(r"^oss://", "", bucket_name).strip("/")
+          endpoint = re.sub(r"^https?://", "", endpoint, flags=re.I).strip("/")
+          bucket_name = re.sub(r"^oss://", "", bucket_name, flags=re.I).strip("/")
+          if "-internal.aliyuncs.com" in endpoint:
+              endpoint = endpoint.replace("-internal.aliyuncs.com", ".aliyuncs.com")
+              print("Rewrote internal endpoint to public:", endpoint)
+
           match = re.search(r"(oss-[a-z0-9-]+\.aliyuncs\.com)$", endpoint)
           if match:
               endpoint = match.group(1)
@@ -72,15 +78,28 @@ jobs:
           print(f"Using endpoint=https://{endpoint}")
           print(f"Using bucket={bucket_name}")
 
+          try:
+              infos = socket.getaddrinfo(endpoint, 443, type=socket.SOCK_STREAM)
+              print("DNS:", sorted({item[4][0] for item in infos}))
+          except Exception as e:
+              print(f"::error::Endpoint DNS 失败: {endpoint} -> {e}")
+              print("ALI_OSS_ENDPOINT 必须是新加坡外网节点 oss-ap-southeast-1.aliyuncs.com，不要用 -internal")
+              sys.exit(1)
+
           auth = oss2.Auth(ak, sk)
-          bucket = oss2.Bucket(auth, f"https://{endpoint}", bucket_name)
+          bucket = oss2.Bucket(auth, f"https://{endpoint}", bucket_name, connect_timeout=30)
 
           try:
               listed = list(oss2.ObjectIterator(bucket, max_keys=1))
               print(f"OSS reachable, sample objects={len(listed)}")
-          except oss2.exceptions.OssError as e:
-              print(f"::error::OSS 访问失败: status={e.status} code={e.code} message={e.message} request_id={e.request_id}")
-              print("请核对：1) Secrets 名称和值 2) Endpoint 必须是桶所在地域 3) Bucket 只填桶名 4) RAM 要有 ListObjects/PutObject 5) 桶不要限制为仅国内 IP")
+          except Exception as e:
+              print("::error::OSS 访问失败")
+              print(type(e).__name__, str(e))
+              print("body=", getattr(e, "body", ""))
+              print("status=", getattr(e, "status", ""))
+              print("code=", getattr(e, "code", ""))
+              traceback.print_exc()
+              print("请把 ALI_OSS_ENDPOINT 改成新加坡外网节点 oss-ap-southeast-1.aliyuncs.com")
               sys.exit(1)
 
           root = Path("dist")
