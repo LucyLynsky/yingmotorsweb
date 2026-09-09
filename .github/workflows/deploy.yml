@@ -4,7 +4,12 @@ name: Deploy to Aliyun OSS
 # 触发条件
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+    paths-ignore:
+      - "images/**"
+      - "docs/**"
+      - "README.md"
+      - ".cursor/**"
   workflow_dispatch:
 
 # 任务定义
@@ -17,9 +22,21 @@ jobs:
 
       - name: Install ossutil
         run: |
-          wget https://gosspublic.alicdn.com/ossutil/1.7.19/ossutil64
-          chmod +x ossutil
-          sudo mv ossutil /usr/local/bin/
+          sudo apt-get update
+          sudo apt-get install -y unzip
+          curl -fsSL https://gosspublic.alicdn.com/ossutil/install.sh | sudo bash
+          ossutil version
+
+      - name: Prepare site files
+        run: |
+          mkdir -p dist
+          cp -a \
+            index.html about.html contact.html custom.html \
+            product.html products.html \
+            favicon.ico robots.txt site.webmanifest \
+            sitemap.html sitemap.xml \
+            dist/
+          cp -a assets css js contact product dist/
 
       - name: Configure ossutil
         env:
@@ -28,13 +45,16 @@ jobs:
           ALI_OSS_ENDPOINT: ${{ secrets.ALI_OSS_ENDPOINT }}
         run: |
           ossutil config \
-            -e $ALI_OSS_ENDPOINT \
-            -i $ALI_ACCESS_KEY_ID \
-            -k $ALI_ACCESS_KEY_SECRET \
+            -e "$ALI_OSS_ENDPOINT" \
+            -i "$ALI_ACCESS_KEY_ID" \
+            -k "$ALI_ACCESS_KEY_SECRET" \
             -L CH
 
       - name: Sync files to OSS
         env:
           ALI_OSS_BUCKET: ${{ secrets.ALI_OSS_BUCKET }}
         run: |
-          ossutil sync ./web/ oss://$ALI_OSS_BUCKET/ --update --delete --force
+          ossutil sync ./dist/ "oss://${ALI_OSS_BUCKET}/" \
+            --update \
+            --delete \
+            --force
