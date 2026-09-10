@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Build square favicons and OG image from the YING MOTORS Y mark. Google Search needs a 1:1 icon >48px."""
+"""Build favicons: brown circle, gold letter Y, no outer frame or stroke."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -8,42 +8,34 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(r"E:\codePrj\web")
 ASSETS = ROOT / "assets"
-INK = (33, 14, 6, 255)
+INK = (33, 14, 6, 255)  # #210E06
 GOLD = (228, 148, 2, 255)
-
-# Wordmark Y from logo-mark.svg, closed path.
-Y_PATH = [
-    (130.56740027510318, 21.0),
-    (88.47386519944979, 108.82599724896836),
-    (88.47386519944979, 164.0),
-    (61.5261348005502, 164.0),
-    (61.5261348005502, 108.82599724896836),
-    (19.432599724896832, 21.0),
-    (47.65887207702888, 21.0),
-    (75.0, 82.56671251719395),
-    (102.34112792297111, 21.0),
-]
+CLEAR = (0, 0, 0, 0)
 
 
-def y_polygon(size: int, pad_ratio: float = 0.18) -> list[tuple[float, float]]:
-    xs = [p[0] for p in Y_PATH]
-    ys = [p[1] for p in Y_PATH]
-    ox, oy = min(xs), min(ys)
-    ow, oh = max(xs) - ox, max(ys) - oy
-    pad = size * pad_ratio
-    avail = size - 2 * pad
-    scale = avail / oh
-    tw = ow * scale
-    tx = (size - tw) / 2
-    ty = pad
-    return [((x - ox) * scale + tx, (y - oy) * scale + ty) for x, y in Y_PATH]
+def load_font(size: int) -> ImageFont.ImageFont:
+    fonts = Path(r"C:\Windows\Fonts")
+    for name in ("ariblk.ttf", "arialbd.ttf", "segoeuib.ttf", "calibrib.ttf", "arial.ttf"):
+        path = fonts / name
+        if path.is_file():
+            return ImageFont.truetype(str(path), size)
+    return ImageFont.load_default()
 
 
 def make_mark(size: int) -> Image.Image:
-    im = Image.new("RGBA", (size, size), INK)
+    """Brown disc + gold Y. Corners stay transparent; no rectangle or ring stroke."""
+    scale = 4
+    s = size * scale
+    im = Image.new("RGBA", (s, s), CLEAR)
     draw = ImageDraw.Draw(im)
-    draw.polygon(y_polygon(size), fill=GOLD)
-    return im
+    draw.ellipse((0, 0, s - 1, s - 1), fill=INK)
+    font = load_font(max(12, int(s * 0.52)))
+    bbox = draw.textbbox((0, 0), "Y", font=font)
+    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    x = (s - tw) / 2 - bbox[0]
+    y = (s - th) / 2 - bbox[1]
+    draw.text((x, y), "Y", font=font, fill=GOLD)
+    return im.resize((size, size), Image.Resampling.LANCZOS)
 
 
 def save_png(im: Image.Image, path: Path, size: int) -> None:
@@ -52,22 +44,13 @@ def save_png(im: Image.Image, path: Path, size: int) -> None:
 
 
 def write_svg() -> None:
-    pts = " ".join(f"{x:.3f},{y:.3f}" for x, y in y_polygon(512, 0.18))
-    svg = f"""<?xml version="1.0" encoding="UTF-8"?>
+    svg = """<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="YING MOTORS">
-  <rect width="512" height="512" fill="#210E06"/>
-  <polygon fill="#E49402" points="{pts}"/>
+  <circle cx="256" cy="256" r="256" fill="#210E06"/>
+  <text x="256" y="348" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="700" font-size="270" fill="#E49402">Y</text>
 </svg>
 """
     (ASSETS / "favicon.svg").write_text(svg, encoding="utf-8")
-
-
-def load_font(size: int) -> ImageFont.ImageFont:
-    for name in ("segoeuib.ttf", "arialbd.ttf", "calibrib.ttf", "segoeui.ttf", "arial.ttf"):
-        path = Path(r"C:\Windows\Fonts") / name
-        if path.is_file():
-            return ImageFont.truetype(str(path), size)
-    return ImageFont.load_default()
 
 
 def make_og() -> None:

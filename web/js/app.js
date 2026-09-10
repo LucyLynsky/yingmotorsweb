@@ -198,7 +198,7 @@ YM.applyContactLinks = function () {
   ["wechat", "whatsapp"].forEach(function (id) {
     var item = document.querySelector(".contact-item#" + id);
     if (!item || item.querySelector(".contact-greeting")) return;
-    var qr = item.querySelector(".qr-card, img");
+    var qr = item.querySelector(".qr-zoom") || item.querySelector(".qr-card, img");
     var scan = item.querySelector(".contact-scan");
     var block = document.createElement("div");
     block.className = "contact-greeting-block";
@@ -325,13 +325,13 @@ YM.mountChrome = function () {
             "wechat",
             "contact_wechat",
             "k18053729906",
-            '<img class="footer-qr" src="contact/WeChatKate.jpg" alt="WeChat QR Kate YingMotors">'
+            YM.qrZoomHtml("contact/WeChatKate.jpg", "WeChat QR Kate YingMotors", "footer-qr")
           ) +
           YM.contactLine(
             "whatsapp",
             "contact_whatsapp",
             '<a href="' + YM.whatsappLink() + '" target="_blank" rel="noopener">+86 180 5372 9906</a>',
-            '<img class="footer-qr" src="contact/WhatsApp.png" alt="WhatsApp QR Kate YingMotors">'
+            YM.qrZoomHtml("contact/WhatsApp.png", "WhatsApp QR Kate YingMotors", "footer-qr")
           ) +
         "</div>" +
       "</div>" +
@@ -382,16 +382,116 @@ YM.pinFloatContacts = function () {
   }
 };
 
+YM.qrZoomHtml = function (src, alt, imgClass) {
+  return (
+    '<button type="button" class="qr-zoom">' +
+      '<img class="' + (imgClass || "") + '" src="' + src + '" alt="' + YM.escapeHtml(alt) + '">' +
+      '<span class="qr-zoom-hint" data-i18n="qr_enlarge">' + YM.escapeHtml(YM.t("qr_enlarge")) + "</span>" +
+    "</button>"
+  );
+};
+
 YM.wxPopHtml = function (id) {
   return (
     '<div class="wx-pop" id="' + id + '" hidden>' +
       '<p class="wx-pop-kicker" data-i18n="contact_wechat">WeChat</p>' +
-      '<img src="contact/WeChatKate.jpg" alt="WeChat QR Kate YingMotors">' +
+      YM.qrZoomHtml("contact/WeChatKate.jpg", "WeChat QR Kate YingMotors") +
       '<p class="wx-pop-id">k18053729906</p>' +
       '<p class="muted" data-i18n="contact_wechat_scan"></p>' +
       '<div class="wx-greeting-block">' + YM.greetingCopyBlock() + "</div>" +
     "</div>"
   );
+};
+
+YM.qrMetaFromImg = function (img) {
+  var src = img.getAttribute("src") || "";
+  var isWa = /whatsapp/i.test(src);
+  return {
+    src: src,
+    alt: img.getAttribute("alt") || "",
+    title: YM.t(isWa ? "contact_whatsapp" : "contact_wechat"),
+    hint: YM.t(isWa ? "contact_wa_scan" : "contact_wechat_scan")
+  };
+};
+
+YM.ensureQrLightbox = function () {
+  var el = document.getElementById("qr-lightbox");
+  if (el) return el;
+  el = document.createElement("div");
+  el.id = "qr-lightbox";
+  el.className = "qr-lightbox";
+  el.setAttribute("hidden", "");
+  el.setAttribute("role", "dialog");
+  el.setAttribute("aria-modal", "true");
+  el.setAttribute("aria-labelledby", "qr-lightbox-title");
+  el.innerHTML =
+    '<div class="qr-lightbox-card">' +
+      '<button type="button" class="qr-lightbox-close" aria-label="' + YM.escapeHtml(YM.t("qr_close")) + '">&times;</button>' +
+      '<p class="qr-lightbox-title" id="qr-lightbox-title"></p>' +
+      '<img class="qr-lightbox-img" alt="">' +
+      '<p class="qr-lightbox-hint"></p>' +
+    "</div>";
+  document.body.appendChild(el);
+  return el;
+};
+
+YM.closeQrLightbox = function () {
+  var el = document.getElementById("qr-lightbox");
+  if (!el || el.hasAttribute("hidden")) return;
+  el.setAttribute("hidden", "");
+  document.body.classList.remove("qr-lightbox-open");
+  var closeBtn = el.querySelector(".qr-lightbox-close");
+  if (closeBtn) closeBtn.setAttribute("aria-label", YM.t("qr_close"));
+  if (YM._qrPrevFocus && YM._qrPrevFocus.focus) {
+    try { YM._qrPrevFocus.focus(); } catch (err) {}
+  }
+  YM._qrPrevFocus = null;
+};
+
+YM.openQrLightbox = function (img) {
+  if (!img) return;
+  var meta = YM.qrMetaFromImg(img);
+  var el = YM.ensureQrLightbox();
+  var title = el.querySelector(".qr-lightbox-title");
+  var hint = el.querySelector(".qr-lightbox-hint");
+  var large = el.querySelector(".qr-lightbox-img");
+  var closeBtn = el.querySelector(".qr-lightbox-close");
+  title.textContent = meta.title;
+  hint.textContent = meta.hint;
+  large.src = meta.src;
+  large.alt = meta.alt;
+  if (closeBtn) closeBtn.setAttribute("aria-label", YM.t("qr_close"));
+  YM._qrPrevFocus = document.activeElement;
+  el.removeAttribute("hidden");
+  document.body.classList.add("qr-lightbox-open");
+  if (closeBtn) closeBtn.focus();
+};
+
+YM.bindQrLightbox = function () {
+  if (YM._qrLightboxBound) return;
+  YM._qrLightboxBound = true;
+  YM.ensureQrLightbox();
+  document.addEventListener("click", function (e) {
+    var light = document.getElementById("qr-lightbox");
+    if (light && !light.hasAttribute("hidden")) {
+      if (e.target === light || (e.target.closest && e.target.closest(".qr-lightbox-close"))) {
+        e.preventDefault();
+        YM.closeQrLightbox();
+      }
+      return;
+    }
+    var trigger = e.target.closest && e.target.closest(".qr-zoom, .footer-qr, .qr-card");
+    if (!trigger) return;
+    var img = trigger.tagName === "IMG" ? trigger : trigger.querySelector("img");
+    if (!img || img.classList.contains("qr-lightbox-img")) return;
+    e.preventDefault();
+    YM.openQrLightbox(img);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    var light = document.getElementById("qr-lightbox");
+    if (light && !light.hasAttribute("hidden")) YM.closeQrLightbox();
+  });
 };
 
 YM.bindWxPop = function (root, btn, pop) {
@@ -924,4 +1024,5 @@ document.addEventListener("DOMContentLoaded", function () {
   YM.bindInquiryForm();
   YM.applyContactLinks();
   YM.bindGreetingCopy();
+  YM.bindQrLightbox();
 });

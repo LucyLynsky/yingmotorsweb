@@ -228,6 +228,7 @@ WhatsApp 预填文案由 `YM.whatsappLink(product)` 生成，会带上当前语�
 
 ### 2.9 上线注意
 
+- **阿里云 OSS 部署**（GitHub Actions、Secrets、RAM、DNS、静态页面）：见 [`.github/ALIYUN-OSS.md`](.github/ALIYUN-OSS.md)。站点目录 `www.yingmotors.net`；产品图仍走 R2。
 - 上传 `css/`、`js/`、`assets/`、`contact/`、`product/`、根目录 `favicon.ico` 和 HTML。Google 搜索结果旁的小图标来自首页的 `rel="icon"`（需正方形、大于 48px 的 PNG）。**现车图不必随站点目录上传**，以 R2 `webimages.yingmotors.com` 为准。
 - `images/products/`、`motorspicture/` 原图体积大且含 HEIC，生产环境可不传。
 - 若以后有独立域名，把 `index.html` 里的 `og:image` 改成绝对 URL。
