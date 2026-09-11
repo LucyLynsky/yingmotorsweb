@@ -208,8 +208,8 @@ def write_html_sitemap(products: list[dict]) -> None:
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="{SITE}/sitemap.html">
   <link rel="sitemap" type="application/xml" title="Sitemap" href="{SITE}/sitemap.xml">
-  <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">
   <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#210E06">
@@ -360,8 +360,8 @@ def write_product_page(p: dict) -> None:
   <link rel="canonical" href="{eq(page_url)}">
   <link rel="sitemap" type="application/xml" title="Sitemap" href="{SITE}/sitemap.xml">
   <base href="../">
-  <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">
   <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#210E06">

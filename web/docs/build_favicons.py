@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Build favicons: brown circle, gold letter Y, no outer frame or stroke."""
+"""Build favicons: opaque brown square, gold letter Y. Google crops the square into a circle."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -10,7 +10,6 @@ ROOT = Path(r"E:\codePrj\web")
 ASSETS = ROOT / "assets"
 INK = (33, 14, 6, 255)  # #210E06
 GOLD = (228, 148, 2, 255)
-CLEAR = (0, 0, 0, 0)
 
 
 def load_font(size: int) -> ImageFont.ImageFont:
@@ -23,19 +22,16 @@ def load_font(size: int) -> ImageFont.ImageFont:
 
 
 def make_mark(size: int) -> Image.Image:
-    """Brown disc + gold Y. Corners stay transparent; no rectangle or ring stroke."""
-    scale = 4
-    s = size * scale
-    im = Image.new("RGBA", (s, s), CLEAR)
+    """Opaque brown square + gold Y. No transparency — Google may ignore transparent icons."""
+    im = Image.new("RGBA", (size, size), INK)
     draw = ImageDraw.Draw(im)
-    draw.ellipse((0, 0, s - 1, s - 1), fill=INK)
-    font = load_font(max(12, int(s * 0.52)))
+    font = load_font(max(12, int(size * 0.58)))
     bbox = draw.textbbox((0, 0), "Y", font=font)
     tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
-    x = (s - tw) / 2 - bbox[0]
-    y = (s - th) / 2 - bbox[1]
+    x = (size - tw) / 2 - bbox[0]
+    y = (size - th) / 2 - bbox[1]
     draw.text((x, y), "Y", font=font, fill=GOLD)
-    return im.resize((size, size), Image.Resampling.LANCZOS)
+    return im
 
 
 def save_png(im: Image.Image, path: Path, size: int) -> None:
@@ -46,8 +42,8 @@ def save_png(im: Image.Image, path: Path, size: int) -> None:
 def write_svg() -> None:
     svg = """<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="YING MOTORS">
-  <circle cx="256" cy="256" r="256" fill="#210E06"/>
-  <text x="256" y="348" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="700" font-size="270" fill="#E49402">Y</text>
+  <rect width="512" height="512" fill="#210E06"/>
+  <text x="256" y="368" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="700" font-size="300" fill="#E49402">Y</text>
 </svg>
 """
     (ASSETS / "favicon.svg").write_text(svg, encoding="utf-8")
