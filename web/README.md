@@ -236,7 +236,7 @@ WhatsApp 预填文案由 `YM.whatsappLink(product)` 生成，会带上当前语�
 - **搜索收录不会随 Cloudflare 上线自动出现。** 部署后必须自己提交：
   1. Cloudflare：打开 **Always Use HTTPS**（现在访问 `http://` 会 522）；不要开 Bot Fight Mode / I’m Under Attack，或确认没有拦截 Googlebot / Baiduspider。
   2. 上传本仓库的 `robots.txt`、`sitemap.xml`、`sitemap.html` 和整个 `product/` 目录。
-  3. [Google Search Console](https://search.google.com/search-console) 验证 **https://yingmotors.com/**（不要只验证 www），提交 `https://yingmotors.com/sitemap.xml`，再用 URL 检查首页并「请求编入索引」。
+  3. [Google Search Console](https://search.google.com/search-console) 验证 **https://www.yingmotors.com/**，提交 `https://www.yingmotors.com/sitemap.xml`，再用 URL 检查首页并「请求编入索引」。
   4. [百度搜索资源平台](https://ziyuan.baidu.com/) 同样验证并提交 sitemap。百度几乎不主动抓未提交的海外静态站；没有 ICP 的 `.com` 在百度排名也会偏弱，外贸询盘以 Google 为主。
 - 加删现车后运行 `python docs/build_sitemap.py`，把新的 `product/*.html`、`sitemap.xml`、`sitemap.html` 一并上传。
 

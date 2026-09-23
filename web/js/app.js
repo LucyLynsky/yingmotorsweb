@@ -1,6 +1,6 @@
 window.YM = window.YM || {};
 
-YM.SITE = "https://yingmotors.com";
+YM.SITE = "https://www.yingmotors.com";
 
 // Get a key at https://web3forms.com using inbox yingmotorsinfo@gmail.com, then paste it here.
 YM.WEB3FORMS_ACCESS_KEY = "d8362f0a-dfa3-4d03-821e-58d364ca7f3e";

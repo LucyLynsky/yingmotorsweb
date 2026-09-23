@@ -13,4 +13,4 @@ Allow: /
 User-agent: Baiduspider
 Allow: /
 
-Sitemap: https://yingmotors.com/sitemap.xml
+Sitemap: https://www.yingmotors.com/sitemap.xml

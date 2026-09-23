@@ -15,7 +15,7 @@ from urllib.parse import quote
 ROOT = Path(r"E:\codePrj\web")
 JS_PATH = ROOT / "js" / "products.js"
 JS = JS_PATH.read_text(encoding="utf-8")
-SITE = "https://yingmotors.com"
+SITE = "https://www.yingmotors.com"
 TODAY = date.today().isoformat()
 IMAGES_BASE = (
     re.search(r'YM_IMAGES_BASE\s*=\s*"([^"]+)"', JS).group(1)
